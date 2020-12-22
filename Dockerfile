@@ -1,16 +1,20 @@
 FROM golang:1.15-alpine AS builder
 
-WORKDIR $GOPATH/src/github.com/jfreeland/ec2-network-monitor
+WORKDIR /src
 
 # Download module dependencies to take advantage of Docker layer caching
 COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build  -ldflags="-w -s" -o /go/bin/ec2nm cmd/ec2nm/main.go
 
-RUN mkdir output && \
-      CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o output/ ./...
+FROM scratch
+# SSL Certs
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-FROM golang:1.15-alpine
-COPY --from=builder /go/src/github.com/jfreeland/ec2-network-monitor/output/ec2nm /usr/local/bin
-CMD ["ec2nm"]
+# Copy our static executable
+COPY --from=builder /go/bin/ec2nm /usr/local/bin/ec2nm
+
+# Run the binary
+ENTRYPOINT ["/usr/local/bin/ec2nm"]
