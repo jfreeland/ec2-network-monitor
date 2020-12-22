@@ -1,0 +1,15 @@
+# annotations:
+#   ad.datadoghq.com/ec2nm.check_names: '["openmetrics"]'
+#   ad.datadoghq.com/ec2nm.init_configs: "[{}]"
+#   ad.datadoghq.com/ec2nm.instances: |
+#     [{
+#       "prometheus_url": "http://%%host%%:8081/metrics",
+#       "namespace": "aws.ec2.ethtool.",
+#       "metrics": [
+#         "bw_in_allowance_exceeded",
+#         "bw_out_allowance_exceeded",
+#         "conntrack_allowance_exceeded",
+#         "linklocal_allowance_exceeded",
+#         "pps_allowance_exceeded"
+#       ]
+#     }]
