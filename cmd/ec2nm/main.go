@@ -14,7 +14,7 @@ func main() {
 	statsHost := flag.String("host", "", "the datadog agent host and port")
 	flag.Parse()
 
-	statsd, err := statsd.New(*statsHost, statsd.WithNamespace("aws.ec2."))
+	statsd, err := statsd.New(*statsHost, statsd.WithNamespace("aws.ec2.ethtool"))
 	if err != nil {
 		log.Fatalf("err: %v\n", err)
 	}

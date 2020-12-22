@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: ec2-network-monitor
-          image: "public.ecr.aws/z1r6e3l2/jfreeland/ec2-network-monitor/ec2nm:latest"
+          image: "public.ecr.aws/z1r6e3l2/jfreeland/ec2-network-monitor:latest"
           env:
             - name: DD_AGENT_HOST
               valueFrom:
@@ -33,7 +33,7 @@ spec:
           imagePullPolicy: IfNotPresent
           resources:
             limits:
-              memory: 50Mi
+              memory: 5Mi
             requests:
-              cpu: 50M
-              memory: 50Mi
+              cpu: 5M
+              memory: 5Mi
