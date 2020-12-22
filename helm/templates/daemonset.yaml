@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "ec2-network-monitor.fullname" . }}
+  labels:
+    {{- include "ec2-network-monitor.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "ec2-network-monitor.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "ec2-network-monitor.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: ec2-network-monitor
+          image: "public.ecr.aws/z1r6e3l2/jfreeland/ec2-network-monitor/ec2nm:latest"
+          env:
+            - name: DD_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: DD_ENTITY_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+          command:
+            - "/usr/local/bin/ec2nm"
+          args:
+            - "-host"
+            - $(DD_AGENT_HOST):8125
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              memory: 50Mi
+            requests:
+              cpu: 50M
+              memory: 50Mi

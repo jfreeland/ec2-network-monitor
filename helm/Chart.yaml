@@ -1,0 +1,6 @@
+apiVersion: v2
+name: ec2-network-monitor
+description: EC2 Network Performance Monitoring Stats Scraper
+type: application
+version: 0.1.0
+appVersion: 0.1.0
