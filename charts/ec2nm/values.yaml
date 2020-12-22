@@ -3,8 +3,8 @@
 #   ad.datadoghq.com/ec2nm.init_configs: "[{}]"
 #   ad.datadoghq.com/ec2nm.instances: |
 #     [{
-#       "prometheus_url": "http://%%host%%:8081/metrics",
-#       "namespace": "aws.ec2.ethtool.",
+#       "prometheus_url": "http://%%host%%:%%port%%/metrics",
+#       "namespace": "aws.ec2.ethtool",
 #       "metrics": [
 #         "bw_in_allowance_exceeded",
 #         "bw_out_allowance_exceeded",
