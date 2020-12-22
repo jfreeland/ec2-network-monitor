@@ -1,17 +1,21 @@
 package main
 
 import (
-	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/rs/zerolog"
 	"github.com/safchain/ethtool"
 )
 
 func main() {
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+	log := zerolog.New(os.Stdout).With().Caller().Logger()
+
 	mux := http.NewServeMux()
 	mux.Handle("/metrics", promhttp.Handler())
 
@@ -22,11 +26,11 @@ func main() {
 	metricsMap := make(map[string]prometheus.Gauge)
 	stats, err := ethHandle.Stats("eth0")
 	if err != nil {
-		log.Fatalf("err: %v\n", err)
+		log.Fatal().Err(err).Msg("Couldn't get eth0 stats")
 	}
 
+	log.Info().Msg("Initializing metrics map")
 	for metricName := range stats {
-		log.Printf("%#v\n", metricName)
 		// TODO: Make labels for these configurable
 		// TODO: Make namespace configurable
 		metricsMap[metricName] = promauto.NewGauge(prometheus.GaugeOpts{
@@ -37,15 +41,11 @@ func main() {
 	// We don't have an exit case for this goroutine because we want it to run
 	// forever anyways
 	go func() {
+		log.Info().Msg("Starting metrics collection loop")
 		for {
-			if err != nil {
-				log.Fatalf("err: %v\n", err)
-			}
-			defer ethHandle.Close()
-
 			stats, err := ethHandle.Stats("eth0")
 			if err != nil {
-				log.Fatalf("err: %v\n", err)
+				log.Fatal().Err(err).Msg("Couldn't get eth0 stats")
 			}
 
 			for metricName, metricValue := range stats {
@@ -57,12 +57,13 @@ func main() {
 		}
 	}()
 
-	// No graceful shutdown for this web server because we don't really need it
-	// to
+	log.Info().Msg("Starting http server to serve prometheus metrics")
+	// No graceful shutdown for this web server because we don't really need
 	srv := &http.Server{
 		// TODO: Make address configurable
 		Addr:    ":8081",
 		Handler: mux,
 	}
 	srv.ListenAndServe()
+	log.Info().Msg("Application is exiting")
 }
