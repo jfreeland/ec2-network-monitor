@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: {{ include "ec2-network-monitor.fullname" . }}
-  labels:
-    {{- include "ec2-network-monitor.labels" . | nindent 4 }}
+  name: { { include "ec2-network-monitor.fullname" . } }
+  labels: { { - include "ec2-network-monitor.labels" . | nindent 4 } }
 spec:
   selector:
     matchLabels:
-      {{- include "ec2-network-monitor.selectorLabels" . | nindent 6 }}
+      { { - include "ec2-network-monitor.selectorLabels" . | nindent 6 } }
   template:
     metadata:
       labels:
-        {{- include "ec2-network-monitor.selectorLabels" . | nindent 8 }}
+        { { - include "ec2-network-monitor.selectorLabels" . | nindent 8 } }
     spec:
+      hostNetwork: true
       containers:
         - name: ec2-network-monitor
           image: "public.ecr.aws/z1r6e3l2/jfreeland/ec2-network-monitor:latest"

@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"time"
 
@@ -33,6 +34,7 @@ func main() {
 		track := []string{"bw_in_allowance_exceeded", "bw_out_allowance_exceeded", "pps_allowance_exceeded", "conntrack_allowance_exceeded", "linklocal_allowance_exceeded"}
 
 		for _, stat := range track {
+			fmt.Printf("%v: %v\n", stat, stats[stat])
 			err = statsd.Count(stat, int64(stats[stat]), nil, 1)
 			if err != nil {
 				log.Printf("err posting gauge %v: %v\n", stat, err)
