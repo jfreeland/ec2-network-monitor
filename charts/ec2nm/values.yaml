@@ -1,4 +1,11 @@
-# annotations:
+annotations:
+  # Default prometheus annotations
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "8081"
+  prometheus.io/path: "/metrics"
+# Datadog Autodiscovery: https://docs.datadoghq.com/agent/kubernetes/prometheus/
+# If using Datadog, you can configure autodiscovery of OpenMetrics with annotations like these:
+#
 #   ad.datadoghq.com/ec2nm.check_names: '["openmetrics"]'
 #   ad.datadoghq.com/ec2nm.init_configs: "[{}]"
 #   ad.datadoghq.com/ec2nm.instances: |
