@@ -37,3 +37,7 @@ spec:
             requests:
               cpu: 5m
               memory: 20Mi
+          ports:
+            - name: metrics
+              containerPort: 8081
+              protocol: TCP
