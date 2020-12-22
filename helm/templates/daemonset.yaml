@@ -30,7 +30,7 @@ spec:
           args:
             - "-host"
             - $(DD_AGENT_HOST):8125
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           resources:
             limits:
               memory: 20Mi
