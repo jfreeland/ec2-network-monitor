@@ -19,7 +19,7 @@ spec:
       hostNetwork: true
       containers:
         - name: ec2nm
-          image: "public.ecr.aws/z1r6e3l2/jfreeland/ec2-network-monitor:{{ .Values.appVersion }}"
+          image: "public.ecr.aws/z1r6e3l2/jfreeland/ec2-network-monitor:{{ .Chart.AppVersion }}"
           ports:
             - name: metrics
             # TODO: Make this configurable?
