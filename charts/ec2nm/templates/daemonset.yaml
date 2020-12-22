@@ -16,20 +16,8 @@ spec:
       containers:
         - name: ec2-network-monitor
           image: "public.ecr.aws/z1r6e3l2/jfreeland/ec2-network-monitor:latest"
-          env:
-            - name: DD_AGENT_HOST
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.hostIP
-            - name: DD_ENTITY_ID
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.uid
           command:
             - "/usr/local/bin/ec2nm"
-          args:
-            - "-host"
-            - $(DD_AGENT_HOST):8125
           imagePullPolicy: Always
           resources:
             limits:
