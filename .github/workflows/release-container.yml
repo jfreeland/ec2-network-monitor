@@ -1,0 +1,43 @@
+# This action differs from the build-and-push because it will push a tagged
+# container based on conventional commits instead of just always pushing with a
+# latest tag. These versioned tags are much more ideal for predictable
+# environments and can be used as the `appVersion` in helm charts.
+name: Release version tagged container
+on:
+  workflow_dispatch: {}
+
+jobs:
+  release-container:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npx semantic-release
+
+      - name: Get latest release
+        id: latest_version
+        uses: abatilo/release-info-action@v1.3.0
+        with:
+          owner: abatilo
+          repo: release-info-action
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: public.ecr.aws
+          ECR_REPOSITORY: z1r6e3l2/jfreeland/ec2-network-monitor
+          IMAGE_TAG: ${{ steps.latest_version.outputs.latest_tag }}
+        run: |
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/z1r6e3l2
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
