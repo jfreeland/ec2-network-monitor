@@ -11,25 +11,22 @@ spec:
     metadata:
       labels:
         {{- include "ec2-network-monitor.selectorLabels" . | nindent 8 }}
+{{- if .Values.annotations }}
+      annotations:
+        {{- toYaml .Values.annotations | nindent 8 }}
+{{- end }}
     spec:
       hostNetwork: true
       containers:
         - name: ec2-network-monitor
           image: "public.ecr.aws/z1r6e3l2/jfreeland/ec2-network-monitor:latest"
-          env:
-            - name: DD_AGENT_HOST
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.hostIP
-            - name: DD_ENTITY_ID
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.uid
+          ports:
+            - name: metrics
+            # TODO: Make this configurable?
+              containerPort: 8081
+              protocol: TCP
           command:
             - "/usr/local/bin/ec2nm"
-          args:
-            - "-host"
-            - $(DD_AGENT_HOST):8125
           imagePullPolicy: Always
           resources:
             limits:
