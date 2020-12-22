@@ -18,7 +18,7 @@ spec:
     spec:
       hostNetwork: true
       containers:
-        - name: ec2-network-monitor
+        - name: ec2nm
           image: "public.ecr.aws/z1r6e3l2/jfreeland/ec2-network-monitor:latest"
           ports:
             - name: metrics
