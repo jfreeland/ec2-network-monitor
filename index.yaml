@@ -3,6 +3,16 @@ entries:
   ec2-network-monitor:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2020-12-22T18:08:47.116791731Z"
+    description: EC2 Network Performance Monitoring Stats Scraper
+    digest: da9a2a4ce9b5d616784cefa86a83475aa042125a1f694ef1e3db50b7a2d33a36
+    name: ec2-network-monitor
+    type: application
+    urls:
+    - https://github.com/jfreeland/ec2-network-monitor/releases/download/ec2-network-monitor-0.1.3/ec2-network-monitor-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2020-12-22T18:00:20.573107078Z"
     description: EC2 Network Performance Monitoring Stats Scraper
     digest: eb2d727a2ffeb68684a94d5043ec68b7822eb105d79346da7fffa29f0456bbc0
